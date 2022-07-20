@@ -8,10 +8,13 @@ const app = require("express")();
 const {
     signUp,
     login,
+    addUserDetails,
 } = require("./api/users");
 
+// user routes
 app.post("/signup", signUp);
 app.post("/login", login);
+app.post("user", addUserDetails);
 
 exports.api = functions.region("europe-central2").https.onRequest(app);
 

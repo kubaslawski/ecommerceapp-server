@@ -72,3 +72,14 @@ exports.validateLoginData = (data) => {
         valid: areArraysInObjectEmpty(errors),
     };
 };
+
+exports.reduceUserDetails = (data) => {
+    const userDetails = {};
+    if (!isStrEmpty(data.bio.trim())) {
+        userDetails.bio = data.bio;
+    }
+    if (!isStrEmpty(data.address.trim())) {
+        userDetails.address = data.address;
+    }
+    return userDetails;
+};

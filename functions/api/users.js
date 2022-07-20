@@ -14,7 +14,11 @@ const {
 const auth = getAuth();
 
 const {noImgUrl} = require("../utils/globalVariables");
-const {validateSignUpData, validateLoginData} = require("../utils/validators");
+const {
+    validateSignUpData,
+    validateLoginData,
+    reduceUserDetails,
+} = require("../utils/validators");
 
 exports.signUp = (req, res) => {
     const newUser = {
@@ -95,5 +99,17 @@ exports.login = (req, res) => {
                 return res.status(400).json(errors);
             default: return res.status(500).json({error: err.code});
             }
+        });
+};
+
+exports.addUserDetails = (req, res) => {
+    const userDetails = reduceUserDetails(req.body);
+
+    db.doc(`users/${req.user.handle}`).update(userDetails)
+        .then(() => {
+            return res.json({message: "Details added successfully"});
+        })
+        .catch((err) => {
+            return res.status(500).json({error: err.code});
         });
 };
