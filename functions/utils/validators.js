@@ -22,6 +22,7 @@ exports.validateSignUpData = (data) => {
         handle: [],
         password: [],
         confirmPassword: [],
+        general: [],
     };
 
     if (isStrEmpty(data.email)) {
@@ -42,6 +43,28 @@ exports.validateSignUpData = (data) => {
 
     if (isStrEmpty(data.handle)) {
         errors.handle.push("Must not be empty");
+    }
+
+    return {
+        errors,
+        valid: areArraysInObjectEmpty(errors),
+    };
+};
+
+exports.validateLoginData = (data) => {
+    const errors = {
+        email: [],
+        password: [],
+        general: [],
+    };
+    if (isStrEmpty(data.email)) {
+        errors.email.push("Must not be empty");
+    }
+    if (!isStrEmail(data.email)) {
+        errors.email.push("Must be a valid email address");
+    }
+    if (isStrEmpty(data.password)) {
+        errors.password.push("Must not be empty");
     }
 
     return {

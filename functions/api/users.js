@@ -5,10 +5,16 @@ const config = require("../utils/config");
 const {initializeApp} = require("firebase/app");
 initializeApp(config);
 
-const {createUserWithEmailAndPassword, getAuth} = require("firebase/auth");
+const {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    getAuth,
+} = require("firebase/auth");
+
+const auth = getAuth();
 
 const {noImgUrl} = require("../utils/globalVariables");
-const {validateSignUpData} = require("../utils/validators");
+const {validateSignUpData, validateLoginData} = require("../utils/validators");
 
 exports.signUp = (req, res) => {
     const newUser = {
@@ -30,7 +36,6 @@ exports.signUp = (req, res) => {
                 errors.handle.push("This handle is already taken");
                 return res.status(400).json(errors);
             } else {
-                const auth = getAuth();
                 return createUserWithEmailAndPassword(auth, newUser.email, newUser.password);
             }
         })
@@ -62,6 +67,33 @@ exports.signUp = (req, res) => {
                 errors.password.push("Password is too weak");
                 return res.status(400).json(errors);
             default: return res.status(500).json({message: err.code});
+            }
+        });
+};
+
+exports.login = (req, res) => {
+    const user = {
+        email: req.body.email,
+        password: req.body.password,
+    };
+
+    const {valid, errors} = validateLoginData(user);
+    if (!valid) return res.status(400).json(errors);
+    signInWithEmailAndPassword(auth, user.email, user.password)
+        .then((data) => {
+            return data.user.getIdToken();
+        })
+        .then((token) => {
+            return res.json({token});
+        })
+        .catch((err) => {
+            switch (err.code) {
+            case "auth/wrong-password":
+                errors.general.push("Wrong credentials, please try again");
+                return res.status(400).json(errors);
+            case "auth/invalid-email":
+                return res.status(400).json(errors);
+            default: return res.status(500).json({error: err.code});
             }
         });
 };

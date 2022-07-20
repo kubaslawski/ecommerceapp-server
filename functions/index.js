@@ -7,8 +7,11 @@ const app = require("express")();
 
 const {
     signUp,
+    login,
 } = require("./api/users");
 
 app.post("/signup", signUp);
+app.post("/login", login);
 
 exports.api = functions.region("europe-central2").https.onRequest(app);
+
