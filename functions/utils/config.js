@@ -5,5 +5,5 @@ module.exports = {
     storageBucket: "ecommerceapp-e7305.appspot.com",
     messagingSenderId: "830382715281",
     appId: "1:830382715281:web:a52886255d7031ed15aa30",
-    measurementId: "G-V7S0S13C5F"
-}
+    measurementId: "G-V7S0S13C5F",
+};
