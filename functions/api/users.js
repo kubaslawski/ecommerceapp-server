@@ -113,3 +113,18 @@ exports.addUserDetails = (req, res) => {
             return res.status(500).json({error: err.code});
         });
 };
+
+exports.getAuthenticatedUser = (req, res) => {
+    const userData = {};
+
+    db.doc(`users/${req.body.handle}`).get()
+        .then((doc) => {
+            if (doc.exists) {
+                userData.credentials = doc.data();
+                return res.json(userData);
+            }
+        })
+        .catch((err) => {
+            return res.status(500).json({error: err.code});
+        });
+};
